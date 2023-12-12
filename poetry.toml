@@ -1,0 +1,13 @@
+[experimental]
+new-installer = true
+
+[installer]
+parallel = true
+
+[virtualenvs]
+create = true
+in-project = false
+prefer-active-python = true
+
+[virtualenvs.options]
+system-site-packages = false
