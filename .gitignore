@@ -1,6 +1,8 @@
 
 /input/**/*_real.txt
 
+/.ruff_cache
+
 # Github Python.gitignore
 # Source:
 # https://raw.githubusercontent.com/github/gitignore/main/Python.gitignore
