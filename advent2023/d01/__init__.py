@@ -24,14 +24,14 @@ def part_1(lines: list[str]) -> int:
 
         # We look at each character from the line, from left to right
         for ch in ln:
-            # If we find a digit, we add it to num_str and stop
+            # If we find a digit, we append it to num_str and break
             if ch in DIGITS:
                 num_str += ch
                 break
 
         # We look again at each character, this time from right to left
         for ch in ln[::-1]:
-            # If we find a digit, we add it to num_str and stop
+            # If we find a digit, we append it to num_str and break
             if ch in DIGITS:
                 num_str += ch
                 break
