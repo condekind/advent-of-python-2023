@@ -1,6 +1,11 @@
+import sys
 import argparse
 import fileinput
 import importlib
+import importlib.util
+from pathlib import Path
+
+_basemodname = Path(__file__).parent.name
 
 
 def read_input(input_files):
@@ -24,6 +29,11 @@ def read_input(input_files):
 
 
 def start():
+    """
+    Parses command line options/arguments, calls read_input, then invokes the
+    function part_1(...) or part_2(...) that matches the provided day/part
+    """
+
     parser = argparse.ArgumentParser()
     parser.add_argument(
         '-d',
@@ -45,14 +55,42 @@ def start():
     args = parser.parse_args()
 
     # Read input from stdin, e.g.,
-    #   python advent2023 --day 1 --part 1 < input/d01/part1_in00.txt
+    #   python advent2042 --day 1 --part 1 < input/d01/part1_in00.txt
     # or from provided file, e.g.,
-    #   python advent2023 --day 1 --part 1 input/d01/part1_in00.txt
+    #   python advent2042 --day 1 --part 1 input/d01/part1_in00.txt
     lines = read_input(args.input_files)
 
-    # Our files always have 2 digits, so days 1-9 have a leading 0 as padding
-    day = str(args.day).zfill(2)
-    daymodule = importlib.import_module(f'd{day}')
+    # The purpose of this next section is to allow for execution of the project
+    # by running either one of:
+    #   python3 -m <basemodname> ...
+    # or
+    #   python3 <basemodname ...
+    #
+    # The directory for each day always have 2 digits, so days 1-9 have a
+    # leading 0 as padding, e.g., day 1 module: d01; day 21 module: d21;
+    daymodname = f'd{str(args.day).zfill(2)}'
+    if _basemodname in sys.modules:
+        daymodule = importlib.import_module(
+            f'{_basemodname}.{daymodname}', package=_basemodname
+        )
+    elif (spec := importlib.util.find_spec(daymodname)) is not None:
+        daymodule = importlib.util.module_from_spec(spec)
+        sys.modules[daymodname] = daymodule
+        if spec.loader is not None:
+            spec.loader.exec_module(daymodule)
+        else:
+            raise ModuleNotFoundError
+    else:
+        try:
+            daymodule = importlib.import_module(
+                f'{_basemodname}.{daymodname}', package=_basemodname
+            )
+        except ModuleNotFoundError as e:
+            print(
+                f'Module {_basemodname}.{daymodname} could not be found: {e}',
+                file=sys.stderr,
+            )
+            raise
 
     # Run part 1 or 2 of the day's exercise with the lines read from input
     match args.part:
@@ -60,8 +98,10 @@ def start():
             print(daymodule.part_1(lines))
         case 2:
             print(daymodule.part_2(lines))
-        case _:
-            raise Exception('Invalid provided day and/or part!')
+        case other:
+            # Should be unreachable since the valid choices were provided to
+            # argparse
+            raise Exception(f'Invalid part: `--part {other}`')
 
 
 if __name__ == '__main__':

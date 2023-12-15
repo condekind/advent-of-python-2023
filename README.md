@@ -52,15 +52,23 @@ If you prefer, you can instead redirect the input from stdin, e.g.:
 python3 advent2023 --day 1 --part 1 < input/d01/part1_example.txt
 ```
 
-**Troubleshooting:**
+### Troubleshooting
 
-> The command above does not work!
+> The commands above don't work!
 
-For the first day, the commands above should work even without pyenv and Poetry. However, using the recommended `pyenv`+`Poetry` setup (remembering to activate your virtualenv, e.g., `source .venv/bin/activate`) decreases the likelihood of conflicts with your version of python available system-wide and its ecosystem.
+For the first day, the commands above should work even without pyenv and Poetry. You can try running it with `-m`:
+```bash
+python3 -m advent2023 --day 1 --part 1 input/d01/part1_example.txt
+```
+Having that said, using the recommended `pyenv`+`Poetry` setup (remembering to activate your virtualenv, e.g., `source .venv/bin/activate`) decreases the likelihood of conflicts with your system-wide python installation and its ecosystem.
 
 ## Development commands/helpers
 
-If you're using poetry, there are some nice commands to lint, format and clean your files:
+_**If** you're using Poetry_, there are some nice commands to lint, format and clean your files (they assume your virtualenv location is `.venv`, at the root of the project):
+
+```bash
+make all
+```
 
 ```bash
 make lint
@@ -74,12 +82,12 @@ make fmt
 make clean
 ```
 
-## Extra info for nerds
+## Extra info
 
 ### How does this repo work?
 
-The entry point for every day/part is [this file](advent2023/__main__.py). It reads the command line options/arguments and additionally, either accepts an input file path directly or reads the input from stdin. It will call either the part_1 or part_2 function of the provided day, which is located in `advent2023/dXX/__init__.py`
+The entry point for every day/part is [this file](advent2023/__main__.py). It reads the command line options/arguments and accepts either an input file path directly or content from stdin. It imports the module that matches the provided day (e.g., `advent2023.d08` for `--day 8`), then calls either the `part_1(lines)` or `part_2(lines)` function of that module (both located in `advent2023/dXX/__init__.py`)
 
 ### I want to modify the way the input is parsed
 
-In the file mentioned above, the default is to read the input and return a list of strings, one for each line. This might not be desirable for every day of the challenge. Since this repo is only a template to get started with the challenge, the modifications to parse input in a different manner are left as an exercise for the programmer 😉
+In the file [linked](advent2023/__main__.py) above, the default is to read the input and return a list of strings, one for each line. This might not be desirable for every day of the challenge. Since this repo is only a template to get started with the challenge, the modifications to parse input in a different manner are left as an exercise for the programmer 😉
