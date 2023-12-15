@@ -93,10 +93,9 @@ def start():
     elif (spec := importlib.util.find_spec(daymodname)) is not None:
         daymodule = importlib.util.module_from_spec(spec)
         sys.modules[daymodname] = daymodule
-        if spec.loader is not None:
-            spec.loader.exec_module(daymodule)
-        else:
+        if spec.loader is None:
             raise ModuleNotFoundError
+        spec.loader.exec_module(daymodule)
     else:
         try:
             daymodule = importlib.import_module(
