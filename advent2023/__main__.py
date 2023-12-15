@@ -8,7 +8,7 @@ from pathlib import Path
 _basemodname = Path(__file__).parent.name
 
 
-def read_input(input_files):
+def read_input(input_files: str | None):
     """Reads input file and returns a list[str], one str per non-empty line"""
 
     lines: list[str] = []
