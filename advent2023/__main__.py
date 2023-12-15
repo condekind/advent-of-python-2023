@@ -77,13 +77,13 @@ def start():
     #   python advent2042 --day 1 --part 1 input/d01/part1_in00.txt
     lines = read_input(args.input_files)
 
-    # The purpose of this next section is to allow for execution of the project
-    # by running either one of:
+    # The purpose of this next section is to allow execution of the project by
+    # running:
+    #   python3 <basemodname> ...
+    # or as a module:
     #   python3 -m <basemodname> ...
-    # or
-    #   python3 <basemodname ...
     #
-    # The directory for each day always have 2 digits, so days 1-9 have a
+    # The directory for each day always has 2 digits, so days 1-9 have a
     # leading 0 as padding, e.g., day 1 module: d01; day 21 module: d21;
     daymodname = f'd{str(args.day).zfill(2)}'
     if _basemodname in sys.modules:
